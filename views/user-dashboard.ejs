@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Dashboard - AutoExpert</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css1/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* ============ OVERRIDE GLOBAL CART STYLES ============ */
+    #serviceRequests .cart-item small,
+    #serviceRequests .cart-item small.text-muted,
+    #serviceRequests .service-meta {
+      color: #e0e0e0 !important;
+      font-weight: 500 !important;
+    }
+
+    #serviceRequests .cart-item h6,
+    #serviceRequests .cart-item strong {
+      color: #ffffff !important;
+      font-weight: 700 !important;
+    }
+
+    #cartItems .cart-item small,
+    #cartItems .cart-item small.text-muted {
+      color: #b0b0b0 !important;
+    }
+
+    #cartItems .cart-item h6 {
+      color: #ffffff !important;
+    }
+
+    /* ============ DARK PROFESSIONAL THEME ============ */
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ============ DASHBOARD HERO SECTION ============ */
+    .dashboard-hero {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f0f0f 0%, #2a2a2a 100%);
+      border-bottom: 3px solid #4a90e2;
+    }
+
+    .dashboard-hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .dashboard-hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.4;
+      filter: brightness(0.3) contrast(1.1) saturate(0.8);
+      animation: slowZoom 25s infinite alternate ease-in-out;
+    }
+
+    .dashboard-hero-bg::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .dashboard-hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      color: white;
+      padding: 0 20px;
+      animation: fadeInUp 1.5s ease-out;
+    }
+
+    .dashboard-hero-content h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+      color: #f8f9fa;
+      text-shadow: 0 2px 25px rgba(0, 0, 0, 0.45);
+      animation: textGlow 4s ease-in-out infinite alternate;
+    }
+
+    .dashboard-hero-content p {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+      color: #e0e0e0;
+      font-weight: 300;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      animation: slideUp 1s ease-out 0.3s both;
+    }
+
+    .dashboard-hero-buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeIn 2s ease-out 0.6s both;
+    }
+
+    .dashboard-hero-buttons .btn {
+      padding: 15px 40px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border: 3px solid;
+      border-radius: 50px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-primary-dash {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      color: white;
+      border-color: #4a90e2;
+      box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+    }
+
+    .btn-primary-dash::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary-dash:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary-dash:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(74, 144, 226, 0.6);
+      background: linear-gradient(135deg, #357abd 0%, #2c5aa0 100%);
+    }
+
+    .btn-light-dash {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-light-dash:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ============ MAIN DASHBOARD CONTENT ============ */
+    .dashboard-main {
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      min-height: calc(100vh - 70vh);
+      padding: 80px 0;
+      position: relative;
+    }
+
+    .dashboard-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 30%, rgba(74, 144, 226, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(52, 73, 94, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .dashboard-cards-wrapper {
+      position: relative;
+      z-index: 2;
+    }
+
+    .dashboard-card {
+      background: linear-gradient(135deg, rgba(25, 25, 25, 0.95) 0%, rgba(35, 35, 35, 0.95) 100%);
+      border-radius: 20px;
+      box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(74, 144, 226, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      padding: 35px;
+      margin-bottom: 35px;
+      border: 1px solid rgba(74, 144, 226, 0.2);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+    }
+
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4a90e2, #357abd);
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.5),
+        0 0 25px rgba(74, 144, 226, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      border-color: rgba(74, 144, 226, 0.35);
+    }
+
+    .dashboard-card h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .dashboard-card h3 i {
+      font-size: 1.8rem;
+      color: #4a90e2;
+    }
+
+    /* ============ ACCENT ELEMENTS ============ */
+    .cart-summary {
+      background: linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(74, 144, 226, 0.2);
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .cart-summary-item:hover {
+      border-bottom-color: rgba(74, 144, 226, 0.4);
+    }
+
+    .cart-summary-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .cart-summary-item strong {
+      color: #ffffff;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-continue {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      border: 2px solid #4a90e2;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(74, 144, 226, 0.2);
+    }
+
+    .btn-continue::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-continue:hover::before {
+      left: 100%;
+    }
+
+    .btn-continue:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+      background: linear-gradient(135deg, #357abd 0%, #4a90e2 100%);
+    }
+
+    /* ============ RESPONSIVE ============ */
+
+    @keyframes textGlow {
+      from { text-shadow: 0 0 20px rgba(74, 144, 226, 0.3); }
+      to { text-shadow: 0 0 30px rgba(74, 144, 226, 0.5); }
+    }
+
+    @keyframes gradientFlow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ============ ACCENT ELEMENTS ============ */
+    .cart-summary {
+      background: linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(74, 144, 226, 0.2);
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(74, 144, 226, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .cart-summary-item:hover {
+      border-bottom-color: rgba(74, 144, 226, 0.4);
+    }
+
+    .cart-summary-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .cart-summary-item strong {
+      color: #ffffff;
+      font-weight: 600;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-continue {
+      background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 25px;
+      border: 2px solid #4a90e2;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 15px rgba(74, 144, 226, 0.2);
+    }
+
+    .btn-continue::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-continue:hover::before {
+      left: 100%;
+    }
+
+    .btn-continue:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(74, 144, 226, 0.4);
+      background: linear-gradient(135deg, #357abd 0%, #4a90e2 100%);
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 768px) {
+      .dashboard-hero {
+        height: 60vh;
+      }
+
+      .dashboard-hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .dashboard-hero-content p {
+        font-size: 1.1rem;
+      }
+
+      .dashboard-card {
+        padding: 25px;
+        margin-bottom: 25px;
+      }
+
+      .dashboard-card h3 {
+        font-size: 1.5rem;
+      }
+
+      .cart-item {
+        padding: 20px;
+      }
+
+      .status-badge {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+      }
+
+      .empty-state {
+        padding: 50px 20px;
+      }
+
+      .empty-state i {
+        font-size: 60px;
+      }
+
+      .dashboard-hero-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .dashboard-hero-buttons .btn {
+        width: 100%;
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+
+      .btn-continue {
+        padding: 12px 25px;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .dashboard-hero {
+        height: 50vh;
+      }
+
+      .dashboard-hero-content h1 {
+        font-size: 2rem;
+      }
+
+      .dashboard-hero-content p {
+        font-size: 1rem;
+      }
+
+      .dashboard-card {
+        padding: 20px;
+      }
+
+      .cart-item {
+        padding: 15px;
+      }
+    }
+
+    .complaint-card {
+      background: rgba(15, 22, 45, 0.95);
+      border: 1px solid rgba(74, 144, 226, 0.18);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .complaint-card h3 {
+      font-size: 1.45rem;
+      margin-bottom: 22px;
+      color: #ffffff;
+    }
+
+    .complaint-card .form-control,
+    .complaint-card textarea {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f1f1f1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+    }
+
+    .complaint-card textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    .complaint-card .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .status-pending { background: #f39c12; }
+    .status-in-review { background: #3498db; }
+    .status-resolved { background: #27ae60; }
+    .status-closed { background: #95a5a6; }
+
+    .complaint-summary {
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(74, 144, 226, 0.16);
+      padding: 22px;
+      margin-top: 20px;
+    }
+
+    .complaint-summary h4 {
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .complaint-summary p {
+      color: #c4c4c4;
+      margin-bottom: 10px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/navbar') %>
+
+  <!-- HERO SECTION -->
+  <section class="dashboard-hero">
+    <div class="dashboard-hero-bg">
+      <img src="/images/road-navigation-display.jpg" alt="Dashboard background">
+    </div>
+    <div class="dashboard-hero-content">
+      <h1>Your Dashboard</h1>
+      <p>Track your bookings and manage your service requests seamlessly</p>
+      <div class="dashboard-hero-buttons">
+        <a href="/service" class="btn btn-primary-dash">
+          <i class="fas fa-plus-circle me-2"></i> Book More Services
+        </a>
+        <a href="/" class="btn btn-light-dash">
+          <i class="fas fa-arrow-left me-2"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <section class="dashboard-main">
+    <div class="container dashboard-cards-wrapper">
+      <div class="row">
+        <!-- CART COLUMN -->
+        <div class="col-lg-6">
+          <div class="dashboard-card">
+            <h3>
+              <i class="fas fa-shopping-cart text-primary"></i>
+              Your Service Cart
+            </h3>
+            <div id="cartItems">
+              <div class="empty-state">
+                <i class="fas fa-inbox"></i>
+                <h5>Cart is Empty</h5>
+                <p>No pending services in your cart. <a href="/service">Start booking now →</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SERVICE REQUESTS COLUMN -->
+        <div class="col-lg-6">
+          <div class="dashboard-card">
+            <h3>
+              <i class="fas fa-list-check text-success"></i>
+              Service Requests
+            </h3>
+            <div id="serviceRequests">
+              <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h5>No Requests Yet</h5>
+                <p>Your service history will appear here</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="complaint-card">
+            <h3><i class="fas fa-headset text-primary"></i> Submit a Complaint</h3>
+            <form id="complaintForm">
+              <input type="text" id="complaintSubject" class="form-control" placeholder="Subject" required>
+              <textarea id="complaintMessage" class="form-control" placeholder="Describe your issue or feedback in detail" required></textarea>
+              <button type="submit" class="btn btn-primary-dash">Send Complaint</button>
+            </form>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="complaint-card">
+            <h3><i class="fas fa-envelope-open-text text-success"></i> Complaint History</h3>
+            <div id="complaintList">
+              <div class="empty-state">
+                <i class="fas fa-comments"></i>
+                <h5>No complaints yet</h5>
+                <p>Any issue you report will appear here with status updates.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <%- include('partials/footer') %>
+  </footer>
+
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Dashboard loaded, initializing cart and orders...');
+      loadCart();
+      loadServiceRequests();
+      loadComplaints();
+      
+      // Auto-refresh service requests and complaints periodically
+      setInterval(() => {
+        loadServiceRequests();
+        loadComplaints();
+      }, 8000);
+    });
+
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem('bookingCart') || '[]');
+      const cartContainer = document.getElementById('cartItems');
+      console.log('Cart items found:', cart.length);
+
+      if (cart.length === 0) {
+        cartContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h5>Cart is Empty</h5>
+            <p>No pending services in your cart. <a href="/service">Start booking now →</a></p>
+          </div>
+        `;
+        return;
+      }
+
+      let totalCost = 0;
+      let totalTime = 0;
+
+      const cartHtml = cart.map((item, index) => {
+        totalCost += Number(item.price || 0);
+        const minutes = parseDuration(item.duration);
+        totalTime += minutes;
+
+        return `
+          <div class="cart-item">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div style="flex: 1;">
+                <h6>${item.title}</h6>
+                <small>${item.duration} • <strong>$${Number(item.price).toFixed(2)}</strong></small>
+              </div>
+              <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeFromCart(${index})" title="Remove from cart">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      cartContainer.innerHTML = `
+        ${cartHtml}
+        <div class="cart-summary">
+          <div class="cart-summary-item">
+            <span><i class="fas fa-hourglass-end me-2"></i> Total Time:</span>
+            <strong>${formatDuration(totalTime)}</strong>
+          </div>
+          <div class="cart-summary-item">
+            <span><i class="fas fa-dollar-sign me-2"></i> Total Cost:</span>
+            <strong>$${totalCost.toFixed(2)}</strong>
+          </div>
+          <a href="/service" class="btn btn-continue">
+            <i class="fas fa-shopping-bag me-2"></i> Proceed to Checkout
+          </a>
+        </div>
+      `;
+    }
+
+    function removeFromCart(index) {
+      const cart = JSON.parse(localStorage.getItem('bookingCart') || '[]');
+      cart.splice(index, 1);
+      localStorage.setItem('bookingCart', JSON.stringify(cart));
+      loadCart();
+    }
+
+    async function loadServiceRequests() {
+      const token = localStorage.getItem('userToken');
+      if (!token) {
+        console.log('No token found - user not logged in');
+        return;
+      }
+
+      try {
+        console.log('Fetching service requests...');
+        const response = await fetch('/user/orders', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Service requests loaded successfully:', data.orders.length);
+          renderServiceRequests(data.orders);
+        } else {
+          const errorData = await response.json();
+          console.error('Failed to load requests:', errorData);
+        }
+      } catch (error) {
+        console.error('Error loading service requests:', error.message);
+      }
+    }
+
+    async function loadComplaints() {
+      const token = localStorage.getItem('userToken');
+      if (!token) return;
+
+      try {
+        const response = await fetch('/user/complaints', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          renderComplaints(data.complaints);
+        } else {
+          console.error('Unable to load complaints');
+        }
+      } catch (error) {
+        console.error('Error loading complaints:', error.message);
+      }
+    }
+
+    function renderComplaints(complaints) {
+      const container = document.getElementById('complaintList');
+
+      if (!complaints || complaints.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-comments"></i>
+            <h5>No complaints yet</h5>
+            <p>Any issue you report will appear here with status updates.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = complaints.map(item => {
+        const statusClass = `status-${item.status.replace(/\s+/g, '-').toLowerCase()}`;
+        const date = new Date(item.createdAt).toLocaleString([], { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+        return `
+          <div class="complaint-summary">
+            <div style="display:flex; justify-content: space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom: 12px;">
+              <h4 style="margin:0; font-size:1.05rem;">${item.subject}</h4>
+              <span class="status-badge ${statusClass}">${item.status}</span>
+            </div>
+            <p>${item.message}</p>
+            <small style="color:#9aa4b1;">Submitted on ${date}</small>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('complaintForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const token = localStorage.getItem('userToken');
+      if (!token) return;
+
+      const subject = document.getElementById('complaintSubject').value.trim();
+      const message = document.getElementById('complaintMessage').value.trim();
+      if (!subject || !message) return;
+
+      try {
+        const response = await fetch('/complaints', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ subject, message })
+        });
+
+        if (response.ok) {
+          document.getElementById('complaintSubject').value = '';
+          document.getElementById('complaintMessage').value = '';
+          loadComplaints();
+        } else {
+          console.error('Failed to submit complaint');
+        }
+      } catch (error) {
+        console.error('Error submitting complaint:', error.message);
+      }
+    });
+
+    function renderServiceRequests(orders) {
+      const container = document.getElementById('serviceRequests');
+
+      if (!orders || orders.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h5>No Requests Yet</h5>
+            <p>Your service history will appear here</p>
+          </div>
+        `;
+        return;
+      }
+
+      const requestsHtml = orders.map(order => {
+        const statusClass = `status-${order.status.replace(/\s+/g, '-').toLowerCase()}`;
+        const statusText = order.status.toUpperCase();
+
+        const itemsHtml = order.items.map(item => `
+          <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(74, 144, 226, 0.18);">
+            <div style="display: block; margin-bottom: 6px;">
+              <strong style="font-size: 1.05rem; color: #ffffff; font-weight: 700; display: block;">${item.title}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <small style="color: #b0b0b0; font-weight: 500;">⏱️ ${item.duration}</small>
+              <small style="color: #4a90e2; font-weight: 600; font-size: 1rem;">💲 $${Number(item.price).toFixed(2)}</small>
+            </div>
+          </div>
+        `).join('');
+
+        const orderDate = new Date(order.createdAt);
+        const dateFormatted = orderDate.toLocaleDateString() + ' at ' + orderDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        return `
+          <div class="cart-item">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span class="status-badge ${statusClass}">${statusText}</span>
+              <small style="color: #b0b0b0; font-weight: 500;" class="text-end">📅 ${dateFormatted}</small>
+            </div>
+            <div style="background: linear-gradient(135deg, rgba(18, 18, 18, 0.95) 0%, rgba(32, 32, 32, 0.95) 100%); padding: 16px; border-radius: 10px; margin-bottom: 12px; border-left: 4px solid #4a90e2;">
+              ${itemsHtml}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid rgba(74, 144, 226, 0.18); background: linear-gradient(135deg, rgba(16, 16, 16, 0.95) 0%, rgba(28, 28, 28, 0.95) 100%); padding: 12px; border-radius: 8px;">
+              <div>
+                <small style="color: #b0b0b0;"><strong style="color: #ffffff; font-size: 1.05rem;">⏳ ${order.totalTime}</strong></small>
+                <small style="color: #6c757d; margin-left: 10px;"> • </small>
+                <small style="color: #4a90e2; font-weight: 600; margin-left: 10px;"><strong>💰 $${Number(order.totalCost).toFixed(2)}</strong></small>
+              </div>
+              <small style="color: #b0b0b0; background: rgba(74, 144, 226, 0.12); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 0.8rem;"><strong style="color: #dfe7ff;">Order ID: ${order._id.substring(0, 8)}</strong></small>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = requestsHtml;
+    }
+
+    function parseDuration(duration) {
+      if (!duration) return 0;
+      const string = String(duration).trim();
+      const hoursMatch = string.match(/(\d+(?:\.\d+)?)\s*h/);
+      const minsMatch = string.match(/(\d+(?:\.\d+)?)\s*m/);
+      let total = 0;
+      if (hoursMatch) total += parseFloat(hoursMatch[1]) * 60;
+      if (minsMatch) total += parseFloat(minsMatch[1]);
+      if (!hoursMatch && !minsMatch) total = parseFloat(string) || 0;
+      return Math.round(total);
+    }
+
+    function formatDuration(minutes) {
+      if (minutes >= 60) {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return mins ? `${hours}h ${mins}m` : `${hours}h`;
+      }
+      return `${minutes}m`;
+    }
+  </script>
+</body>
+</html>
