@@ -90,11 +90,7 @@ PORT=5000
 ## ▶️ Run the App
 
 ```bash
-<<<<<<< HEAD
-node app.js
-=======
 nodemon app.js
->>>>>>> origin/master
 ```
 
 Then open:
