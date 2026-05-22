@@ -6,7 +6,7 @@
 
 AutoExpert is a Node.js web application built with Express and EJS that provides a car service booking website with user registration/login, service listing, order booking, complaint management, and admin controls.
 
-## 🔥 What AutoExpert Does
+## 🔥 What AutoExpert delivers:
 
 - Provides a **public landing page** with car service listings, about page, and contact page.
 - Allows users to **register and log in** with secure password hashing.
